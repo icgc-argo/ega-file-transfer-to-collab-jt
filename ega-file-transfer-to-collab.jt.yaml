@@ -46,6 +46,20 @@ workflow:
       type: string
     ega_metadata_object_id:  # this is the object_id obtained from ICGC service using bundle_id and ega_metadata_file_name as input
       type: string
+    insert_size:
+      type: integer
+    paired_end:
+      type: boolean
+    donor_gender:
+      type: string
+    donor_submitter_id:
+      type: string
+    sample_type:
+      type: string
+    specimen_class:
+      type: string
+    specimen_type:
+      type: string
     files:
       type: array
       items:
@@ -63,6 +77,8 @@ workflow:
             type: string
           idx_object_id:
             type: string
+          file_type:
+            type: string
 
   output: null  # we may not need this, does the workflow as a whole need some sort of output? or output from individual tasks is just fine
 
@@ -70,45 +86,45 @@ workflow:
   #- completed@upload
 
   tasks:
-    prepare_metadata_xml:
-      tool: prepare_metadata_xml
-      input:
-        ega_metadata_repo: ega_metadata_repo
-        project_code: project_code
-        bundle_id: bundle_id
-        ega_study_id: ega_study_id
-        ega_dataset_id: ega_dataset_id
-        ega_sample_id: ega_sample_id
-        ega_analysis_id: ega_analysis_id
-        ega_experiment_id: ega_experiment_id
-        ega_run_id: ega_run_id
-        ega_metadata_file_name: ega_metadata_file_name
-      depends_on: null
+    #prepare_metadata_xml:
+    #  tool: prepare_metadata_xml
+    #  input:
+    #    ega_metadata_repo: ega_metadata_repo
+    #    project_code: project_code
+    #    bundle_id: bundle_id
+    #    ega_study_id: ega_study_id
+    #    ega_dataset_id: ega_dataset_id
+    #    ega_sample_id: ega_sample_id
+    #    ega_analysis_id: ega_analysis_id
+    #    ega_experiment_id: ega_experiment_id
+    #    ega_run_id: ega_run_id
+    #    ega_metadata_file_name: ega_metadata_file_name
+    #  depends_on: null
 
-    xml_upload_to_aws:
-      tool: upload_to_aws
-      input:
-        bundle_id: bundle_id
-        object_id: ega_metadata_object_id  # this is the object_id obtained from ICGC service using bundle_id and ega_metadata_file_name as input
-        file: xml_file@prepare_metadata_xml
-        file_name: ega_metadata_file_name
-        file_size: xml_file_size@prepare_metadata_xml
-        file_md5sum: xml_file_md5sum@prepare_metadata_xml
-        project_code: project_code
-      depends_on:
-      - completed@prepare_metadata_xml
+    #xml_upload_to_aws:
+    #  tool: upload_to_aws
+    #  input:
+    #    bundle_id: bundle_id
+    #    object_id: ega_metadata_object_id  # this is the object_id obtained from ICGC service using bundle_id and ega_metadata_file_name as input
+    #    file: xml_file@prepare_metadata_xml
+    #    file_name: ega_metadata_file_name
+    #    file_size: xml_file_size@prepare_metadata_xml
+    #    file_md5sum: xml_file_md5sum@prepare_metadata_xml
+    #    project_code: project_code
+    #  depends_on:
+    #  - completed@prepare_metadata_xml
 
-    xml_file_upload:
-      tool: upload
-      input:
-        bundle_id: bundle_id
-        object_id: ega_metadata_object_id  # this is the object_id obtained from ICGC service using bundle_id and ega_metadata_file_name as input
-        file: xml_file@prepare_metadata_xml
-        file_name: ega_metadata_file_name
-        file_size: xml_file_size@prepare_metadata_xml
-        file_md5sum: xml_file_md5sum@prepare_metadata_xml
-      depends_on:
-      - completed@xml_upload_to_aws
+    #xml_file_upload:
+    #  tool: upload
+    #  input:
+    #    bundle_id: bundle_id
+    #    object_id: ega_metadata_object_id  # this is the object_id obtained from ICGC service using bundle_id and ega_metadata_file_name as input
+    #    file: xml_file@prepare_metadata_xml
+    #    file_name: ega_metadata_file_name
+    #    file_size: xml_file_size@prepare_metadata_xml
+    #    file_md5sum: xml_file_md5sum@prepare_metadata_xml
+    #  depends_on:
+    #  - completed@xml_upload_to_aws
 
 
     parallel_download:

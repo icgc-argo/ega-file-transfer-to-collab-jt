@@ -5,6 +5,7 @@ import subprocess
 import os
 import sys
 import time
+import docker
 
 task_dict = get_task_dict(sys.argv[1])
 

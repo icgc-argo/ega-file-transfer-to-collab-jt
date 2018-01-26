@@ -44,10 +44,12 @@ ega_metadata_repo = task_dict.get('input').get('ega_metadata_repo')
 task_start = int(time.time())
 
 try:
-    subprocess.check_output(['prepare_ega_xml_audit.py',
+    subprocess.check_output(['docker','pull','quay.io/baminou/ega-collab-dckr:latest'])
+    subprocess.check_output(['docker','run','-v',os.getcwd()+':/app','quay.io/baminou/ega-collab-dckr'
+      'prepare_ega_xml_audit.py',
       '-i',ega_metadata_repo,
       '-p',project_code,
-      '-o',output_file,
+      '-o','/app/'+output_file,
       '-d',ega_dataset_id,
       '-a',ega_analysis_id if ega_analysis_id else '',
       '-e',ega_expriment_id if ega_expriment_id else '',
