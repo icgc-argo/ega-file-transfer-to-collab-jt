@@ -39,15 +39,15 @@ try:
 
     #Download
     if project_code in ['LINC-JP', 'BTCA-JP']:
-      r = subprocess.check_output(['docker','run','-e ASCP_EGA_USER','-e ASCP_EGA_HOST','-e ASPERA_SCP_PASS','-v',os.getcwd()+':/app','quay.io/baminou/ega-collab-dckr','download_ega_file.py',
+      r = subprocess.check_output(['docker','run','-e','ASCP_EGA_USER','-e','ASCP_EGA_HOST','-e','ASPERA_SCP_PASS','-v',os.getcwd()+':/app','quay.io/baminou/ega-collab-dckr','download_ega_file.py',
         '-p',project_code,'-f',str(ega_file_id)[-2:]+"/"+ega_file_id+".aes",'-o','/app/'+encrypted_file_name])
     else:
-      r = subprocess.check_output(['docker','run','-e ASCP_EGA_USER','-e ASCP_EGA_HOST','-e ASPERA_SCP_PASS','-v',os.getcwd()+':/app','quay.io/baminou/ega-collab-dckr','download_ega_file.py',
+      r = subprocess.check_output(['docker','run','-e','ASCP_EGA_USER','-e','ASCP_EGA_HOST','-e','ASPERA_SCP_PASS','-v',os.getcwd()+':/app','quay.io/baminou/ega-collab-dckr','download_ega_file.py',
         '-p',project_code,'-f',ega_file_id+".aes",'-o','/app/'+encrypted_file_name])
 
 
       #Decryption
-    r = subprocess.check_output(['docker','run','-e EGA_DCK_KEY','-v',os.getcwd()+':/app','quay.io/baminou/ega-collab-dckr',
+    r = subprocess.check_output(['docker','run','-e','EGA_DCK_KEY','-v',os.getcwd()+':/app','quay.io/baminou/ega-collab-dckr',
       'decrypt_ega_file.py','-i',os.path.join('/app',encrypted_file_name),'-o', os.path.join('/app',file_name)])
 
     #Check MD5 sum
