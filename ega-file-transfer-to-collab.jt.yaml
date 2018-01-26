@@ -2,7 +2,7 @@
 
 workflow:
   name:  ega-file-transfer-to-collab
-  version: "0.6.11"
+  version: "0.7.1"
   source_code: "https://github.com/icgc-dcc/ega-file-transfer-to-collab-jt"
 
   runtime:
