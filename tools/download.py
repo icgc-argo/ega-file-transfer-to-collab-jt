@@ -20,12 +20,12 @@ cwd = os.getcwd()
 task_start = int(time.time())
 
 for i in xrange(0,len(task_dict.get('input').get('files'))):
-    ega_file_id = task_dict.get('input')[i].get('ega_file_id')
-    file_name = task_dict.get('input')[i].get('file_name')
+    ega_file_id = task_dict.get('input').get('files')[i].get('ega_file_id')
+    file_name = task_dict.get('input').get('files')[i].get('file_name')
     encrypted_file_name = file_name+".aes"
-    file_md5sum = task_dict.get('input')[i].get('file_md5sum')
-    object_id = task_dict.get('input')[i].get('object_id')
-    project_code = task_dict.get('input')[i].get('project_code')
+    file_md5sum = task_dict.get('input').get('files')[i].get('file_md5sum')
+    object_id = task_dict.get('input').get('files')[i].get('object_id')
+    project_code = task_dict.get('input').get('files')[i].get('project_code')
 
     try:
         subprocess.check_output(['docker','pull','quay.io/baminou/ega-collab-dckr:latest'])
