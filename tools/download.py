@@ -25,7 +25,7 @@ for i in xrange(0,len(task_dict.get('input').get('files'))):
     encrypted_file_name = file_name+".aes"
     file_md5sum = task_dict.get('input').get('files')[i].get('file_md5sum')
     object_id = task_dict.get('input').get('files')[i].get('object_id')
-    project_code = task_dict.get('input').get('files').get('project_code')
+    project_code = task_dict.get('input').get('project_code')
 
     save_output_json(task_dict.get('input'))
 
