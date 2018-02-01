@@ -60,6 +60,8 @@ workflow:
       type: string
     specimen_type:
       type: string
+    aligned_reference_genome:
+      type: string
     files:
       type: array
       items:
@@ -86,157 +88,58 @@ workflow:
   #- completed@upload
 
   tasks:
-    #prepare_metadata_xml:
-    #  tool: prepare_metadata_xml
-    #  input:
-    #    ega_metadata_repo: ega_metadata_repo
-    #    project_code: project_code
-    #    bundle_id: bundle_id
-    #    ega_study_id: ega_study_id
-    #    ega_dataset_id: ega_dataset_id
-    #    ega_sample_id: ega_sample_id
-    #    ega_analysis_id: ega_analysis_id
-    #    ega_experiment_id: ega_experiment_id
-    #    ega_run_id: ega_run_id
-    #    ega_metadata_file_name: ega_metadata_file_name
-    #  depends_on: null
-
-    #xml_upload_to_aws:
-    #  tool: upload_to_aws
-    #  input:
-    #    bundle_id: bundle_id
-    #    object_id: ega_metadata_object_id  # this is the object_id obtained from ICGC service using bundle_id and ega_metadata_file_name as input
-    #    file: xml_file@prepare_metadata_xml
-    #    file_name: ega_metadata_file_name
-    #    file_size: xml_file_size@prepare_metadata_xml
-    #    file_md5sum: xml_file_md5sum@prepare_metadata_xml
-    #    project_code: project_code
-    #  depends_on:
-    #  - completed@prepare_metadata_xml
-
-    #xml_file_upload:
-    #  tool: upload
-    #  input:
-    #    bundle_id: bundle_id
-    #    object_id: ega_metadata_object_id  # this is the object_id obtained from ICGC service using bundle_id and ega_metadata_file_name as input
-    #    file: xml_file@prepare_metadata_xml
-    #    file_name: ega_metadata_file_name
-    #    file_size: xml_file_size@prepare_metadata_xml
-    #    file_md5sum: xml_file_md5sum@prepare_metadata_xml
-    #  depends_on:
-    #  - completed@xml_upload_to_aws
-
-
-    parallel_download:
-      scatter:
-        input:
-          ega_file:
-            with_items: files  # this can be from output of a previous task, eg, files@previous_task
-            task_suffix: ega_file.ega_file_id  # Optional. IN this case, 'ega_file' will be used if omitted.
-      tasks:
-        download:
-          tool: download  # optional, if omitted tool name will be the same as task name
-          input:
-            project_code: project_code
-            ega_file_id: ega_file.ega_file_id
-            file_name: ega_file.file_name
-            file_md5sum: ega_file.file_md5sum
-            object_id: ega_file.object_id
-          depends_on: null
-        # md5sum_check_data:
-        #   tool: md5sum_check
-        #   input:
-        #     file: file@download
-        #     file_name: file_name@download
-        #     file_md5sum: ega_file.file_md5sum
-        #   depends_on:  # optional, this could be figured out from input params
-        #   - completed@download@same_host  # state@parent_tool@
-        decryption:
-          tool: decryption  # optional, if omitted tool name will be the same as task name
-          input:
-            input_file: file@download
-            ega_file_id: ega_file_id@download
-            file_name: file_name@download
-            file_md5sum: file_md5sum@download
-            object_id: object_id@download
-          depends_on:
-          - completed@download
-        md5sum_check_decrypt:
-          tool: md5sum_check
-          input:
-            file: file@decryption
-            file_md5sum: file_md5sum@decryption
-          depends_on:  # optional, this could be figured out from input params
-          - completed@decryption # state@parent_tool@
-        delete_encrypted_file:
-          tool: delete_file
-          input:
-            file: file@download
-          depends_on:
-          - completed@md5sum_check_decrypt  # depends on the success of md5sum check
-        generate_bai:
-          tool: generate_bai  # optional, if omitted tool name will be the same as task name
-          input:
-            bam_file: file@decryption
-            idx_object_id: ega_file.idx_object_id
-            idx_file_name: ega_file.idx_file_name
-          depends_on:
-          - completed@decryption
-          - completed@md5sum_check_decrypt
-        upload_to_aws:
-          tool: upload_to_aws
-          input:
-            file: file@decryption
-            file_name: ega_file.file_name
-            file_md5sum: file_md5sum@download
-            object_id: object_id@download
-            project_code: project_code
-
-            idx_file: idx_file@generate_bai
-            idx_file_name: idx_file_name@generate_bai
-            idx_object_id: idx_object_id@generate_bai
-            idx_file_md5sum: idx_file_md5sum@generate_bai
-          depends_on:
-          - completed@generate_bai
-        upload:
-          tool: upload
-          input:
-            bundle_id: bundle_id
-            object_id: object_id@decryption  # this is the object_id obtained from ICGC service using bundle_id and ega_metadata_file_name as input
-            file: file@decryption
-            file_name: file_name@decryption
-            file_size: file_size@decryption
-            file_md5sum: file_md5sum@decryption
-            idx_object_id: idx_object_id@generate_bai  # this is the object_id obtained from ICGC service using bundle_id and ega_metadata_file_name as input
-            idx_file: idx_file@generate_bai
-            idx_file_name: idx_file_name@generate_bai
-            idx_file_size: idx_file_size@generate_bai
-            idx_file_md5sum: idx_file_md5sum@generate_bai
-          depends_on:
-          - completed@decryption
-          - completed@generate_bai
-          - completed@upload_to_aws
-        qc_from_collab:
-          tool: qc_from_collab
-          input:
-            object_id: ega_file.object_id
-            file_name: ega_file.file_name
-          depends_on:
-          - completed@upload
-        qc_from_aws:
-          tool: qc_from_aws
-          input:
-            object_id: ega_file.object_id
-            file_name: ega_file.file_name
-            project_code: project_code
-          depends_on:
-          - completed@upload_to_aws
+    download:
+      tool: download  # optional, if omitted tool name will be the same as task name
+      input:
+        project_code: project_code
+        files: files
+      depends_on: null
+    prepare_metadata_xml:
+      tool: prepare_metadata_xml
+      input:
+        ega_metadata_repo: ega_metadata_repo
+        project_code: project_code
+        bundle_id: bundle_id
+        ega_study_id: ega_study_id
+        ega_dataset_id: ega_dataset_id
+        ega_sample_id: ega_sample_id
+        ega_analysis_id: ega_analysis_id
+        ega_experiment_id: ega_experiment_id
+        ega_run_id: ega_run_id
+        ega_metadata_file_name: ega_metadata_file_name
+        out_dir: out_dir@input
+      depends_on: null
+    upload:
+      tool: upload
+      input:
+        donor_id: donor_id
+        library_strategy: library_strategy
+        paired_end: paired_end
+        input_dir: out_dir@prepare_metadata_xml
+        files: files
+      depends_on:
+      - completed@download
+      - completed@prepare_metadata_xml
+    delete_tmp_dir:
+      tool: delete_tmp_dir
+      input:
+        dir: out_dir@upload
 
 
 
 # A workflow is made up with one or more tools
 # Each tool can have its own docker imagine if desirable
 tools:
+  download:
+    command: download.py
+    input:
+      files:
+        type: array
+      bundle_id:
+        type: string
+    output:
+      out_dir:  # new field
+        type: string
   prepare_metadata_xml:  # make a new XML cancatenate original EGA XMLs: study, sample, analysis/(experiment and run)
     command: prepare_metadata_xml.py
     input:
@@ -260,168 +163,25 @@ tools:
         type: string
       ega_metadata_file_name:
         type: string
-    output:
-      xml_file:
-        type: string
-        is_file: true
-      xml_file_name:  # passing through from ega_metadata_file_name
-        type: string
-      xml_file_size:
-        type: integer
-      xml_file_md5sum:
-        type: string
-
-  download:
-    command: download.py
-    input:
-      project_code:
-        type: string
-      ega_file_id:
-        type: string
-      file_name:
-        type: string
-      file_md5sum:
-        type: string
-      object_id:
-        type: string
-    output:
-      file:  # new field
-        type: string
-        is_file: true
-      ega_file_id:  # passing through
-        type: string
-      file_name:  # passing through
-        type: string
-      file_md5sum:  # passing through
-        type: string
-      object_id:  # passing through
-        type: string
-
-  md5sum_check:
-    command: md5sum_check.py
-    input:
-      file:  # new field
-        type: string
-        is_file: true
-      file_md5sum:
-        type: string
-
-  decryption:
-    command: decryption.py
-    input:
-      input_file:
-        type: string
-        is_file: true
-      ega_file_id:  # passing through
-        type: string
-      file_name:  # passing through
-        type: string
-      file_md5sum:  # passing through
-        type: string
-      object_id:  # passing through
+      out_dir:
         type: string
     output:
       file:
         type: string
         is_file: true
-      ega_file_id:  # passing through
-        type: string
-      file_name:  # passing through
-        type: string
-      file_size:  # passing through
-        type: string
-      file_md5sum:  # passing through
-        type: string
-      object_id:  # passing through
-        type: string
-
-  generate_bai:
-    command: generate_bai.py
-    input:
-      bam_file:
-        type: string
-        is_file: true
-      idx_object_id:
-        type: string
-      idx_file_name:
-        type: string
-    output:
-      # this is the object_id obtained from ICGC service using bundle_id and ega_metadata_file_name as input
-      idx_object_id:
-        type: string
-      idx_file:
-        type: string
-        is_file: true
-      idx_file_name:
-        type: string
-      idx_file_size:
-        type: string
-      idx_file_md5sum:
-        type: string
-
   upload:
     command: upload.py
     input:
-      bundle_id:
+      donor_id:
         type: string
-      object_id:
+      library_strategy:
         type: string
-      file:
-        type: string
-        is_file: true
-      file_name:
-        type: string
-      file_size:
-        type: integer
-      file_md5sum:
-        type: string
-      # the follow params are optional
-      idx_object_id:
-        type: string
-      idx_file:
-        type: string
-        is_file: true
-      idx_file_name:
-        type: string
-      idx_file_size:
-        type: integer
-      idx_file_md5sum:
-        type: string
-
-  upload_to_aws:
-    command: upload_to_aws.py
-    input:
-      file:
-        type: string
-      file_name:
-        type: string
-      file_md5sum:
-        type: string
-      object_id:
-        type: string
-      project_code:
-        type: string
-      # the follow params are optional
-      idx_object_id:
-        type: string
-      idx_file:
-        type: string
-        is_file: true
-      idx_file_name:
-        type: string
-      idx_file_size:
-        type: integer
-      idx_file_md5sum:
-        type: string
-    output:
-      file:
-        type: string
-        is_file: true
-      file_md5sum:
-        type: string
-      allowed_upload:
+      paired_end:
         type: boolean
-
+      input_dir:
+        type: string
+      files:
+        type: array
   qc_from_collab:
     command: qc_from_collab.py
     input:
@@ -440,10 +200,8 @@ tools:
       project_code:
         type: string
 
-  delete_file:
-    command: delete_file.py
+  delete_tmp_dir:
+    command: delete_tmp_dir.py
     input:
-      file:
+      dir:
         type: string
-        is_file: true
-

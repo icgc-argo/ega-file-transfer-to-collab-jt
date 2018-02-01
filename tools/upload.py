@@ -13,44 +13,22 @@ cwd = os.getcwd()
 
 """
     input:
-      bundle_id:
+      donor_id:
         type: string
-      object_id:
+      library_strategy:
         type: string
-      file:
+      paired_end:
+        type: boolean
+      input_dir:
         type: string
-        is_file: true
-      file_name:
-        type: string
-      file_size:
-        type: integer
-      file_md5sum:
-        type: string
-      # the follow params are optional
-      idx_object_id:
-        type: string
-      idx_file:
-        type: string
-        is_file: true
-      idx_file_name:
-        type: string
-      idx_file_size:
-        type: integer
-      idx_file_md5sum:
-        type: string
+      files:
+        type: array
 """
-bundle_id = task_dict.get('input').get('bundle_id')
-object_id = task_dict.get('input').get('object_id')
-file_ = task_dict.get('input').get('file')
-file_name = task_dict.get('input').get('file_name')
-file_size = task_dict.get('input').get('file_size')
-file_md5sum = task_dict.get('input').get('file_md5sum')
-
-idx_object_id = task_dict.get('input').get('idx_object_id')
-idx_file = task_dict.get('input').get('idx_file')
-idx_file_name = task_dict.get('input').get('idx_file_name')
-idx_file_size = task_dict.get('input').get('idx_file_size')
-idx_file_md5sum = task_dict.get('input').get('idx_file_md5sum')
+donor_id = task_dict.get('input').get('donor_id')
+library_strategy = task_dict.get('input').get('library_strategy')
+paired_end = task_dict.get('input').get('paired_end')
+input_dir = task_dict.get('input').get('input_dir')
+files = task_dict.get('input').get('files')
 
 
 task_start = int(time.time())

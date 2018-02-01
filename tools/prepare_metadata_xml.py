@@ -13,21 +13,30 @@ cwd = os.getcwd()
 
 """
     input:
-      ega_metadata_git_repo:
-        type: string
-      ega_metadata_path:
+      ega_metadata_repo:
         type: string
       project_code:
         type: string
       bundle_id:  # EGAR or EGAZ ID
         type: string
+      ega_study_id:
+        type: string
       ega_dataset_id:
         type: string
       ega_sample_id:
         type: string
+      ega_analysis_id:
+        type: string
+      ega_expriment_id:
+        type: string
+      ega_run_id:
+        type: string
       ega_metadata_file_name:
         type: string
+      out_dir:
+        type: string
 """
+ega_metadata_repo = task_dict.get('input').get('ega_metadata_repo')
 project_code = task_dict.get('input').get('project_code')
 bundle_id = task_dict.get('input').get('bundle_id')
 ega_dataset_id = task_dict.get('input').get('ega_dataset_id')
@@ -38,14 +47,14 @@ ega_expriment_id = task_dict.get('input').get('ega_expriment_id')
 ega_analysis_id = task_dict.get('input').get('ega_analysis_id')
 ega_run_id = task_dict.get('input').get('ega_run_id', '')
 output_file = task_dict.get('input').get('ega_metadata_file_name')
-ega_metadata_repo = task_dict.get('input').get('ega_metadata_repo')
+out_dir = task_dict.get('input').get('out_dir')
 
 # do the real work here
 task_start = int(time.time())
 
 try:
     subprocess.check_output(['docker','pull','quay.io/baminou/ega-collab-dckr:latest'])
-    subprocess.check_output(['docker','run','-v',os.getcwd()+':/app','quay.io/baminou/ega-collab-dckr'
+    subprocess.check_output(['docker','run','-v',out_dir+':/app','quay.io/baminou/ega-collab-dckr'
       'prepare_ega_xml_audit.py',
       '-i',ega_metadata_repo,
       '-p',project_code,
@@ -67,22 +76,12 @@ task_stop = int(time.time())
 
 """
     output:
-      xml_file:
-        type: string
-        is_file: true
-      xml_file_name:  # passing through from ega_metadata_file_name
-        type: string
-      xml_file_size:
-        type: integer
-      xml_file_md5sum:
+      out_dir:
         type: string
 """
 
 output_json = {
-    'xml_file': os.path.join(cwd, output_file),
-    'xml_file_name': output_file,
-    'xml_file_size': os.path.getsize(output_file),
-    'xml_file_md5sum': get_md5(output_file),
+    'file': os.path.join(out_dir, output_file),
     'runtime': {
         'task_start': task_start,
         'task_stop': task_stop
