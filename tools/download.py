@@ -27,6 +27,8 @@ for i in xrange(0,len(task_dict.get('input').get('files'))):
     object_id = task_dict.get('input').get('files')[i].get('object_id')
     project_code = task_dict.get('input').get('files')[i].get('project_code')
 
+    save_output_json(task_dict.get('input'))
+
     try:
         subprocess.check_output(['docker','pull','quay.io/baminou/ega-collab-dckr:latest'])
 
