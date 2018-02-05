@@ -84,9 +84,6 @@ workflow:
 
   output: null  # we may not need this, does the workflow as a whole need some sort of output? or output from individual tasks is just fine
 
-  #completion_depends_on:  # do we need this? is it all tasks succeeded then it's completed
-  #- completed@upload
-
   tasks:
     download:
       tool: download  # optional, if omitted tool name will be the same as task name
@@ -94,6 +91,7 @@ workflow:
         project_code: project_code
         files: files
       depends_on: null
+
     prepare_metadata_xml:
       tool: prepare_metadata_xml
       input:
@@ -107,8 +105,9 @@ workflow:
         ega_experiment_id: ega_experiment_id
         ega_run_id: ega_run_id
         ega_metadata_file_name: ega_metadata_file_name
-        out_dir: out_dir@input
+        out_dir: out_dir@download
       depends_on: null
+
     upload:
       tool: upload
       input:

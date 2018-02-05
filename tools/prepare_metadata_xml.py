@@ -52,6 +52,8 @@ out_dir = task_dict.get('input').get('out_dir')
 # do the real work here
 task_start = int(time.time())
 
+time.sleep(120)
+
 try:
     subprocess.check_output(['docker','pull','quay.io/baminou/ega-collab-dckr:latest'])
     subprocess.check_output(['docker','run','-v',out_dir+':/app','quay.io/baminou/ega-collab-dckr'

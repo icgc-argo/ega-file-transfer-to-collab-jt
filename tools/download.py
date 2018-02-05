@@ -29,7 +29,7 @@ for i in xrange(0,len(task_dict.get('input').get('files'))):
     object_id = task_dict.get('input').get('files')[i].get('object_id')
     project_code = task_dict.get('input').get('project_code')
 
-    time.sleep(300)
+    time.sleep(120)
 
     try:
         subprocess.check_output(['docker','pull','quay.io/baminou/ega-collab-dckr:latest'])
@@ -53,14 +53,14 @@ for i in xrange(0,len(task_dict.get('input').get('files'))):
         #  sys.exit(1)
 
         #Delete encrypted file
-        os.remove(encrypted_file_name)
+        #os.remove(encrypted_file_name)
 
         #Generate bai file
-        r = subprocess.check_output(['docker','run','-v',os.getcwd()+':/app','quay.io/baminou/ega-collab-dckr','samtools','index','/app/'+file_name])
+        #r = subprocess.check_output(['docker','run','-v',os.getcwd()+':/app','quay.io/baminou/ega-collab-dckr','samtools','index','/app/'+file_name])
 
-        if not os.getcwd() + file_name+'.bai':
-            task_info = 'Error: bai file could not be generated'
-            sys.exit(1)
+        #if not os.getcwd() + file_name+'.bai':
+        #    task_info = 'Error: bai file could not be generated'
+        #    sys.exit(1)
 
     except Exception, e:
         with open('jt.log', 'w') as f: f.write(str(e))
