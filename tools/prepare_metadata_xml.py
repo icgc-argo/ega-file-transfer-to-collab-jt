@@ -56,7 +56,7 @@ time.sleep(120)
 
 try:
     subprocess.check_output(['docker','pull','quay.io/baminou/ega-collab-dckr:latest'])
-    subprocess.check_output(['docker','run','-v',out_dir+':/app','quay.io/baminou/ega-collab-dckr'
+    subprocess.check_output(['docker','run','-v',out_dir+':/app','quay.io/baminou/ega-collab-dckr',
       'prepare_ega_xml_audit.py',
       '-i',ega_metadata_repo,
       '-p',project_code,
