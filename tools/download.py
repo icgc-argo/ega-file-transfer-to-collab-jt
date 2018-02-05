@@ -15,6 +15,8 @@ cwd = os.getcwd()
     input:
       files:
         type: array
+      project_code:
+        type: string
 """
 
 task_start = int(time.time())

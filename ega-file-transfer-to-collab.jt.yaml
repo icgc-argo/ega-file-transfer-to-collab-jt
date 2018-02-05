@@ -135,7 +135,7 @@ tools:
     input:
       files:
         type: array
-      bundle_id:
+      project_code:
         type: string
     output:
       out_dir:  # new field
