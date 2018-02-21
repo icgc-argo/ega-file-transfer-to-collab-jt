@@ -108,17 +108,28 @@ workflow:
         out_dir: out_dir@download
       depends_on: null
 
+    generate_song_payload:
+      tool: generate_song_payload
+      input:
+        input_directory: out_dir@download
+        files: files
+        song_analysis_id: bundle_id
+        experiment_library_strategy: library_strategy
+        reference_genome: aligned_reference_genome
+      depends_on:
+        - completed@download
+        - completed@prepare_metadata_xml
+
     upload:
       tool: upload
       input:
-        donor_id: donor_id
-        library_strategy: library_strategy
+        input_directory: out_dir@download
+        study_id: project_code
         paired_end: paired_end
-        input_dir: out_dir@prepare_metadata_xml
         files: files
       depends_on:
-      - completed@download
-      - completed@prepare_metadata_xml
+      - completed@generate_song_payload
+
     delete_tmp_dir:
       tool: delete_tmp_dir
       input:
@@ -168,17 +179,28 @@ tools:
       file:
         type: string
         is_file: true
+  generate_song_payload:
+    command: generate_song_payload.py
+    input:
+      input_directory:
+        type: string
+      files:
+        type: array
+      song_analysis_id:
+        type: string
+      experiment_library_strategy:
+        type: string
+      reference_genome:
+        type: string
   upload:
     command: upload.py
     input:
-      donor_id:
+      input_directory:
         type: string
-      library_strategy:
+      payload:
         type: string
-      paired_end:
+      study_id:
         type: boolean
-      input_dir:
-        type: string
       files:
         type: array
   qc_from_collab:
