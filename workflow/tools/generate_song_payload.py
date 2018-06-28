@@ -42,6 +42,8 @@ def get_file_type(fname):
         return 'BAI'
     if fname.endswith('.bam'):
         return 'BAM'
+    if '.fastq' in fname:
+        return 'FASTQ'
     return None
 
 def get_specimen_class(specimen_type):
@@ -49,7 +51,12 @@ def get_specimen_class(specimen_type):
         return 'Normal'
     return 'Tumour'
 
-
+def md5sum(filename):
+    md5 = hashlib.md5()
+    with open(filename, 'rb') as f:
+        for chunk in iter(lambda: f.read(128 * md5.block_size), b''):
+            md5.update(chunk)
+    return md5.hexdigest()
 
 
 output_file = os.path.join(input_dir,'payload.json')
@@ -70,21 +77,21 @@ for file in files:
     idx_file_path = os.path.join(input_dir, idx_file)
     song_payload.add_file_payload(FilePayload(file_access='controlled',
                               file_name=file.get('file_name'),
-                              md5sum = hashlib.md5(open(file_path, 'rb').read()).hexdigest(),
+                              md5sum = md5sum(file_path),
                               file_type=get_file_type(file.get('file_name')),
                               file_size=os.stat(file_path).st_size))
 
     if os.path.isfile(idx_file_path):
         song_payload.add_file_payload(FilePayload(file_access='controlled',
                                   file_name=idx_file,
-                                  md5sum = hashlib.md5(open(idx_file_path, 'rb').read()).hexdigest(),
+                                  md5sum = md5sum(idx_file_path),
                                   file_type=get_file_type(idx_file),
                                   file_size=os.stat(idx_file_path).st_size))
 
 file_path = os.path.join(input_dir, metadata_file_name)
 song_payload.add_file_payload(FilePayload(file_access='open',
                           file_name=metadata_file_name,
-                          md5sum=hashlib.md5(open(file_path, 'rb').read()).hexdigest(),
+                          md5sum=md5sum(file_path),
                           file_type=get_file_type(metadata_file_name),
                           file_size=os.stat(file_path).st_size))
 
