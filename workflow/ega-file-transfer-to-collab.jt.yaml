@@ -180,8 +180,6 @@ workflow:
       - completed@generate_song_payload
       - completed@upload
       - completed@upload_to_aws
-      - completed@qc_from_collab
-      - completed@qc_from_aws
     delete_directory_collab:
       tool: delete_directory
       input:
@@ -193,9 +191,7 @@ workflow:
       - completed@prepare_metadata_xml
       - completed@generate_song_payload
       - completed@upload
-      - completed@upload_to_aws
       - completed@qc_from_collab
-      - completed@qc_from_aws
     delete_directory_qc:
       tool: delete_directory
       input:
@@ -206,9 +202,7 @@ workflow:
       - completed@generate_bai
       - completed@prepare_metadata_xml
       - completed@generate_song_payload
-      - completed@upload
       - completed@upload_to_aws
-      - completed@qc_from_collab
       - completed@qc_from_aws
 
 
