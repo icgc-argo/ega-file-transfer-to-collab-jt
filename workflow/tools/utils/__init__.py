@@ -20,7 +20,7 @@ def get_md5(fname):
     hash = hashlib.md5()
     if not os.path.isfile(fname): return None
     with open(fname) as f:
-        for chunk in iter(lambda: f.read(1024*256), ""):
+        for chunk in iter(lambda: f.read(1024*1024), ""):
             hash.update(chunk)
     return hash.hexdigest()
 
