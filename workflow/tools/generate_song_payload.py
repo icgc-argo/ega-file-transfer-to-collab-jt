@@ -38,13 +38,21 @@ sample_type = 'DNA'
 def get_file_type(fname):
     if fname.endswith('.xml'):
         return 'XML'
+    if fname.endswith('.xml.gz'):
+        return 'XML'
     if fname.endswith('.bai'):
         return 'BAI'
     if fname.endswith('.bam'):
         return 'BAM'
-    if '.fastq' in fname:
+    if fname.endswith('.fastq'):
         return 'FASTQ'
-    return None
+    if fname.endswith('.fastq.gz'):
+        return 'FASTQ'
+    if fname.endswith('.fq'):
+        return 'FASTQ'
+    if fname.endswith('.fq.gz'):
+        return 'FASTQ'
+    raise Exception('unknown file type for file: %s' % fname)
 
 def get_specimen_class(specimen_type):
     if 'normal' in specimen_type.lower():
