@@ -52,7 +52,7 @@ def get_file_type(fname):
         return 'FASTQ'
     if fname.endswith('.fq.gz'):
         return 'FASTQ'
-    raise('unknown file type for file: %s' % fname)
+    raise Exception('unknown file type for file: %s' % fname)
 
 def get_specimen_class(specimen_type):
     if 'normal' in specimen_type.lower():
