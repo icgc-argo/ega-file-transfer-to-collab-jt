@@ -26,8 +26,8 @@ try:
                                  '-e', 'STORAGEURL=' + os.environ.get('STORAGEURL_COLLAB'),
                                  '-e', 'METADATAURL=' + os.environ.get('METADATAURL_COLLAB'),
                                  '-v', cwd+':/app',
-                                 download_container,
-                                 '-id',file.get('object_id'), '-o', '/app'])
+                                 download_container,'download',
+                                 '-id',file.get('object_id'), '-o', '/app','--skip-validation'])
 
         if not os.path.isfile(os.path.join(cwd,os.path.basename(file.get('file_name')))):
             task_info = "Error: File "+file.get('object_id')+":"+os.path.basename(file.get('file_name'))+" couldn't be downloaded from collab."

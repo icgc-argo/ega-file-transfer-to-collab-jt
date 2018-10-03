@@ -34,14 +34,18 @@ if run:
                                      '-e', 'STORAGEURL=' + os.environ.get('STORAGEURL_AWS'),
                                      '-e', 'METADATAURL=' + os.environ.get('METADATAURL_AWS'),
                                      '-v', os.getcwd() + ':/app',
-                                     download_container,
-                                     '-id', file.get('object_id'), '-o', '/app'])
+                                     download_container,'download',
+                                     '-id', file.get('object_id'), '-o', '/app','--skip-validation'])
 
             if not os.path.isfile(os.path.join(cwd, os.path.basename(file.get('file_name')))):
                 task_info = "Error: File " + file.get('object_id') + ":" + os.path.basename(
                     file.get('file_name')) + " couldn't be downloaded from collab."
             else:
-                os.remove(os.path.join(cwd, os.path.basename(file.get('file_name'))))
+                if not get_md5(os.path.join(cwd, os.path.basename(file.get('file_name')))) == file.get('md5'):
+                    task_info = "Error: File " + file.get('object_id') + ":" + os.path.basename(
+                        file.get('file_name')) + " does not have matching md5 sum."
+                else:
+                    os.remove(os.path.join(cwd, os.path.basename(file.get('file_name'))))
     except Exception, e:
         task_info = "Error: " + str(e)
 
