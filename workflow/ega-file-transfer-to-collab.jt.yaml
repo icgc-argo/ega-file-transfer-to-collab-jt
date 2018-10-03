@@ -161,13 +161,13 @@ workflow:
         manifest: manifest@upload
       depends_on:
       - completed@upload
-    qc_from_aws:
-      tool: qc_from_aws
-      input:
-        manifest: manifest@upload
-        study_id: project_code
-      depends_on:
-      - completed@upload_to_aws
+    #qc_from_aws:
+    #  tool: qc_from_aws
+    #  input:
+    #    manifest: manifest@upload
+    #    study_id: project_code
+    #  depends_on:
+    #  - completed@upload_to_aws
     delete_directory_download:
       tool: delete_directory
       input:
@@ -180,8 +180,6 @@ workflow:
       - completed@generate_song_payload
       - completed@upload
       - completed@upload_to_aws
-      - completed@qc_from_collab
-      - completed@qc_from_aws
     delete_directory_collab:
       tool: delete_directory
       input:
@@ -193,23 +191,19 @@ workflow:
       - completed@prepare_metadata_xml
       - completed@generate_song_payload
       - completed@upload
-      - completed@upload_to_aws
       - completed@qc_from_collab
-      - completed@qc_from_aws
-    delete_directory_qc:
-      tool: delete_directory
-      input:
-        input_dir: out_dir@qc_from_aws
-      depends_on:
-      - completed@download
-      - completed@decryption
-      - completed@generate_bai
-      - completed@prepare_metadata_xml
-      - completed@generate_song_payload
-      - completed@upload
-      - completed@upload_to_aws
-      - completed@qc_from_collab
-      - completed@qc_from_aws
+    #delete_directory_qc:
+    #  tool: delete_directory
+    #  input:
+    #    input_dir: out_dir@qc_from_aws
+    #  depends_on:
+    #  - completed@download
+    #  - completed@decryption
+    #  - completed@generate_bai
+    #  - completed@prepare_metadata_xml
+    #  - completed@generate_song_payload
+    #  - completed@upload_to_aws
+    #  - completed@qc_from_aws
 
 
 
@@ -335,13 +329,13 @@ tools:
       manifest:
         type: object
 
-  qc_from_aws:
-    command: qc_from_aws.py
-    input:
-      manifest:
-        type: object
-      study_id:
-        type: string
+  #qc_from_aws:
+  #  command: qc_from_aws.py
+  #  input:
+  #    manifest:
+  #      type: object
+  #    study_id:
+  #      type: string
 
   delete_directory:
     command: delete_directory.py
