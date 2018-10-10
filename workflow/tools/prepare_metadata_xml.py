@@ -34,7 +34,7 @@ ega_dataset_id = task_dict.get('input').get('ega_dataset_id')
 ega_sample_id = task_dict.get('input').get('ega_sample_id')
 ega_study_id = task_dict.get('input').get('ega_study_id')
 ega_metadata_file_name = task_dict.get('input').get('ega_metadata_file_name')
-ega_expriment_id = task_dict.get('input').get('ega_expriment_id')
+ega_experiment_id = task_dict.get('input').get('ega_experiment_id')
 ega_analysis_id = task_dict.get('input').get('ega_analysis_id')
 ega_run_id = task_dict.get('input').get('ega_run_id', '')
 output_file = task_dict.get('input').get('ega_metadata_file_name')
@@ -56,7 +56,7 @@ try:
                               '-o',os.path.join('/app',output_file),
                               '-d',ega_dataset_id,
                               '-a',ega_analysis_id if ega_analysis_id else '',
-                              '-e',ega_expriment_id if ega_expriment_id else '',
+                              '-e',ega_experiment_id if ega_experiment_id else '',
                               '-r',ega_run_id if ega_run_id else '',
                               '-sa',ega_sample_id if ega_sample_id else '',
                               '-st',ega_study_id if ega_study_id else ''])

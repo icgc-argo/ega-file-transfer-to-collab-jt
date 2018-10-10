@@ -227,7 +227,7 @@ tools:
         type: string
       ega_analysis_id:
         type: string
-      ega_expriment_id:
+      ega_experiment_id:
         type: string
       ega_run_id:
         type: string
