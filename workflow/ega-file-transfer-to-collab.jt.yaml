@@ -54,8 +54,6 @@ workflow:
       type: string
     submitter_specimen_type:
       type: string
-    submitter_sample_id:
-      type: string
     submitter_specimen_id:
       type: string
     files:

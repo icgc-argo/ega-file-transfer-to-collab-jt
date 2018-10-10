@@ -29,7 +29,7 @@ project_code = task_dict.get('input').get('project_code')
 
 task_start = int(time.time())
 
-download_container = "quay.io/baminou/dckr_download_ega_file"
+download_container = "quay.io/baminou/dckr_download_ega_file:1.0"
 subprocess.check_output(['docker', 'pull', download_container])
 
 for _file in files:
