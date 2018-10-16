@@ -24,8 +24,8 @@ cwd = os.getcwd()
 if run:
 
     try:
-        download_container = "quay.io/baminou/dckr_icgc_download:1.0"
-        subprocess.check_output(['docker', 'pull', download_container])
+        download_container = "quay.io/baminou/dckr_icgc_download"
+        subprocess.check_output(['docker', 'pull', download_container+':1.0'])
 
         for file in manifest.get('files'):
             subprocess.check_output(['docker', 'run',
