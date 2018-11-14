@@ -26,10 +26,10 @@ manifest=''
 
 if run:
 
-    upload_container = "quay.io/baminou/dckr_song_upload"
+    upload_container = "quay.io/baminou/dckr_song_upload:1.0"
     song_server = os.environ.get('SONG_SERVER_AWS')
 
-    subprocess.check_output(['docker', 'pull', upload_container+':1.0'])
+    subprocess.check_output(['docker', 'pull', upload_container])
 
     subprocess.check_output(['docker','run',
                              '--net=host',
