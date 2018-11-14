@@ -69,7 +69,7 @@ def md5sum(filename):
 
 output_file = os.path.join(input_dir,'payload.json')
 experiment_payload = ExperimentPayload(aligned=is_aligned(analysis_id, reference_genome, files), library_strategy=library_strategy, reference_genome=reference_genome)
-song_payload = SongPayload(analysis_id=analysis_id, analysis_type='sequencingRead', experiment_payload=experiment_payload)
+song_payload = SongPayload(analysis_id=analysis_id, analysis_type='sequencingRead', experiment_payload=experiment_payload,study=study_id)
 donor_payload = DonorPayload(donor_gender=donor_gender, donor_submitter_id=donor_submitter_id)
 specimen_payload = SpecimenPayload(specimen_class=get_specimen_class(specimen_type),
                                    specimen_type=specimen_type,specimen_submitter_id=submitter_specimen_id)
