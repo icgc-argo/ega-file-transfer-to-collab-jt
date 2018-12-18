@@ -47,6 +47,9 @@ task_start = int(time.time())
 metadata_container = "quay.io/baminou/dckr_prepare_metadata_xml"
 subprocess.check_output(['docker', 'pull', metadata_container+':1.0'])
 
+if not ega_metadata_repo.startswith('https://'):
+    ega_metadata_repo = 'https://'+ega_metadata_repo
+
 try:
     subprocess.check_output(['docker','run',
                              '-v', out_dir + ':/app',
