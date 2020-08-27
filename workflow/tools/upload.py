@@ -15,7 +15,7 @@ input_dir = task_dict.get('input').get('input_dir')
 study_id = task_dict.get('input').get('study_id')
 
 
-upload_container = "quay.io/baminou/dckr_song_upload:1.0"
+upload_container = "quay.io/oicr/dckr_song_upload:latest"
 song_server = os.environ.get('SONG_SERVER_COLLAB')
 
 subprocess.check_output(['docker', 'pull', upload_container])
